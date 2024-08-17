@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:thichtruyentranh/locator.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
+
   runApp(const MyApp());
 }
 
