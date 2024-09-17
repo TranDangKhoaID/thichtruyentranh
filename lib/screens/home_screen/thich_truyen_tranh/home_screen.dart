@@ -1,73 +1,147 @@
 import 'dart:async';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thichtruyentranh/screens/home_screen/cubit/home_cubit.dart';
+import 'package:get/get.dart';
+import 'package:thichtruyentranh/screens/home_screen/controller/home_controller.dart';
+import 'package:thichtruyentranh/widgets/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
-  static BlocProvider<HomeCubit> provider() {
-    return BlocProvider(
-      create: (context) => HomeCubit(),
-      child: const HomeScreen(),
-    );
-  }
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
+  /// MARK: - Initials;
+  //controller
+  final _controller = Get.put(HomeController());
+
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    context.read<HomeCubit>().getHomeItems();
+    _controller.getHomeComics();
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   context.read<HomeCubit>().getHomeItems();
-  // }
-
-  /// MARK: - Initials;
-  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
-      body: BlocBuilder<HomeCubit, HomeState>(
-        buildWhen: (prev, curr) {
-          return curr is GetHomeItems || curr is ShowLoading;
-        },
-        builder: (context, state) {
-          final items = state.data.items;
-          final isLoading = state.data.isLoading;
-          return ListView.separated(
-            //shrinkWrap: true,
-            //physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              if (isLoading) {
-                return const CircularProgressIndicator();
-              }
-              return ListTile(
-                // leading: Image.network(
-                //   items[index].thumbUrl ?? '',
-                //   fit: BoxFit.cover,
-                // ),
-                title: Text(items[index].name ?? ''),
-                subtitle: Text(items[index].slug ?? ''),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const Divider();
-            },
-            itemCount: isLoading ? 1 : items.length,
-          );
-        },
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(5),
+          color: Colors.white,
+          width: Get.width,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHomeComics(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildHomeComics() {
+    return Obx(() {
+      final items = _controller.comics.value[0];
+      if (_controller.isLoadings.value[0]) {
+        // return ShimmerListItems(
+        //   text: 'Phim mới cập nhật',
+        // );
+        return CircularProgressIndicator();
+      }
+      if (items.isEmpty) {
+        return Center(
+          child: Text('Lỗi kết nối'),
+        );
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: Row(
+              children: [
+                Text(
+                  'Truyện mới cập nhật',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Spacer(),
+                IconButton(
+                  onPressed: () {
+                    // final totalPages = _controller.totalPages.value[0];
+                    // Get.to(
+                    //   () => MoviesNewUpdateScreen(
+                    //     totalPages: totalPages,
+                    //   ),
+                    // );
+                  },
+                  icon: Icon(
+                    Icons.arrow_forward_ios,
+                  ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 220,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                final comic = items[index];
+                return GestureDetector(
+                  // onTap: () => Get.to(
+                  //   () => MovieDetailScreen(slug: movie.slug!),
+                  // ),
+                  child: Container(
+                    width: 130,
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            width: 130,
+                            height: 160,
+                            imageUrl:
+                                'https://img.otruyenapi.com/uploads/comics/${comic.thumb_url}',
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const ShimmerImage(),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          comic.name ?? '',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: items.length,
+            ),
+          ),
+        ],
+      );
+    });
   }
 }

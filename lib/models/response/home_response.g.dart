@@ -19,7 +19,7 @@ Map<String, dynamic> _$HomeResponseToJson(HomeResponse instance) =>
 
 HomeData _$HomeDataFromJson(Map<String, dynamic> json) => HomeData(
       items: (json['items'] as List<dynamic>?)
-          ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Comic.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

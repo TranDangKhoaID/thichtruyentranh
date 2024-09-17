@@ -1,22 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'chapter_latest.g.dart';
+part 'chapter.g.dart';
 
 @JsonSerializable()
-class ChapterLatest {
+class Chapter {
   String? filename;
   String? chapterName;
   String? chapterTitle;
   String? chapterApiData;
 
-  ChapterLatest({
+  Chapter({
     this.filename,
     this.chapterName,
     this.chapterTitle,
     this.chapterApiData,
   });
 
-  factory ChapterLatest.fromJson(Map<String, dynamic> json) =>
-      _$ChapterLatestFromJson(json);
-  Map<String, dynamic> toJson() => _$ChapterLatestToJson(this);
+  factory Chapter.fromJson(Map<String, dynamic> json) =>
+      _$ChapterFromJson(json);
+  Map<String, dynamic> toJson() => _$ChapterToJson(this);
 }

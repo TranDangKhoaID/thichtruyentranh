@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:thichtruyentranh/models/item.dart';
+import 'package:thichtruyentranh/models/comic.dart';
 
 part 'home_response.g.dart';
 
@@ -18,7 +18,7 @@ class HomeResponse {
 
 @JsonSerializable()
 class HomeData {
-  final List<Item>? items;
+  final List<Comic>? items;
 
   HomeData({
     this.items,

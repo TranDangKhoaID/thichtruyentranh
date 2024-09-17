@@ -1,38 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'item.dart';
+part of 'comic.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Item _$ItemFromJson(Map<String, dynamic> json) => Item(
+Comic _$ComicFromJson(Map<String, dynamic> json) => Comic(
       id: json['id'] as String?,
       name: json['name'] as String?,
       slug: json['slug'] as String?,
-      originName: (json['originName'] as List<dynamic>?)
+      origin_name: (json['origin_name'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
       status: json['status'] as String?,
-      thumbUrl: json['thumbUrl'] as String?,
-      subDocquyen: json['subDocquyen'] as bool?,
+      thumb_url: json['thumb_url'] as String?,
+      sub_docquyen: json['sub_docquyen'] as bool?,
       category: (json['category'] as List<dynamic>?)
           ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
           .toList(),
       updatedAt: json['updatedAt'] as String?,
       chaptersLatest: (json['chaptersLatest'] as List<dynamic>?)
-          ?.map((e) => ChapterLatest.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Chapter.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
+Map<String, dynamic> _$ComicToJson(Comic instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'slug': instance.slug,
-      'originName': instance.originName,
+      'origin_name': instance.origin_name,
       'status': instance.status,
-      'thumbUrl': instance.thumbUrl,
-      'subDocquyen': instance.subDocquyen,
+      'thumb_url': instance.thumb_url,
+      'sub_docquyen': instance.sub_docquyen,
       'category': instance.category,
       'updatedAt': instance.updatedAt,
       'chaptersLatest': instance.chaptersLatest,
