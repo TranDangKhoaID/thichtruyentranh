@@ -10,6 +10,6 @@ class SplashCubit extends Cubit<SplashState> {
   SplashCubit() : super(const SplashStateInitial());
 
   Future<void> getConfigs() async {
-    Get.offAllNamed(AppRoute.homeScreen);
+    Get.offAllNamed(AppRoute.mainScreen);
   }
 }

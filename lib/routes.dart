@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thichtruyentranh/screens/home_screen/thich_truyen_tranh/home_screen.dart';
-import 'package:thichtruyentranh/screens/main_screen/thich_truyen_tranh/main_screen.dart';
+import 'package:thichtruyentranh/screens/main_screen/main_screen.dart';
 import 'package:thichtruyentranh/screens/splash_screen/thich_truyen_tranh/splash_screen.dart';
 
 class AppRoute {
@@ -18,7 +18,7 @@ class AppRoute {
         );
       case mainScreen:
         return MaterialPageRoute(
-          builder: (_) => MainScreen(),
+          builder: (_) => MainScreen.provider(),
           settings: settings,
         );
       case homeScreen:
