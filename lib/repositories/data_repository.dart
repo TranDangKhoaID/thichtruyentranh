@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:thichtruyentranh/common/configs.dart';
+import 'package:thichtruyentranh/models/response/comics_response.dart';
 import 'package:thichtruyentranh/models/response/home_response.dart';
 import 'package:thichtruyentranh/network/rest_client.dart';
 
@@ -40,5 +41,10 @@ class DataRepository implements RestClient {
   @override
   Future<HomeResponse> getHome() {
     return _client.getHome();
+  }
+
+  @override
+  Future<ComicsResponse> getComics({required String type, int? page}) {
+    return _client.getComics(type: type, page: page);
   }
 }
