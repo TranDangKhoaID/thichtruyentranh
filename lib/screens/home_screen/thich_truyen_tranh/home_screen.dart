@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:thichtruyentranh/common/constants.dart';
 import 'package:thichtruyentranh/models/comic.dart';
+import 'package:thichtruyentranh/screens/comic_detail_screen/comic_detail_screen.dart';
 import 'package:thichtruyentranh/screens/home_screen/controller/home_controller.dart';
 import 'package:thichtruyentranh/screens/home_screen/widgets/shimmer_grid_items.dart';
 import 'package:thichtruyentranh/widgets/shimmer.dart';
@@ -129,9 +130,9 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
               itemBuilder: (context, index) {
                 final comic = items[index];
                 return GestureDetector(
-                  // onTap: () => Get.to(
-                  //   () => MovieDetailScreen(slug: movie.slug!),
-                  // ),
+                  onTap: () => Get.to(
+                    () => ComicDetailScreen(slug: comic.slug!),
+                  ),
                   child: Container(
                     width: 130,
                     padding: const EdgeInsets.all(5),
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(5),
                           child: CachedNetworkImage(
                             width: 130,
                             height: 160,
@@ -234,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(5),
                       child: CachedNetworkImage(
                         height: 160,
                         imageUrl: '${Constants.CND_IMAGE}${comic.thumb_url}',

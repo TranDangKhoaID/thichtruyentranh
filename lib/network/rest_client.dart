@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:thichtruyentranh/models/response/comic_detail_response.dart';
 import 'package:thichtruyentranh/models/response/comics_response.dart';
 import 'package:thichtruyentranh/models/response/home_response.dart';
 
@@ -17,5 +18,10 @@ abstract class RestClient {
   Future<ComicsResponse> getComics({
     @Path('type') required String type,
     @Path('page') int? page,
+  });
+
+  @GET('/v1/api/truyen-tranh/{slug}')
+  Future<ComicDetailResponse> getComicDetail({
+    @Path('slug') required String slug,
   });
 }
