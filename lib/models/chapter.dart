@@ -5,15 +5,15 @@ part 'chapter.g.dart';
 @JsonSerializable()
 class Chapter {
   String? filename;
-  String? chapterName;
-  String? chapterTitle;
-  String? chapterApiData;
+  String? chapter_name;
+  String? chapter_title;
+  String? chapter_api_data;
 
   Chapter({
     this.filename,
-    this.chapterName,
-    this.chapterTitle,
-    this.chapterApiData,
+    this.chapter_name,
+    this.chapter_title,
+    this.chapter_api_data,
   });
 
   factory Chapter.fromJson(Map<String, dynamic> json) =>

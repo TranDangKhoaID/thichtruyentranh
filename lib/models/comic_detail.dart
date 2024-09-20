@@ -11,9 +11,10 @@ class ComicDetail {
   final List<String>? origin_name;
   final String? content;
   final String? status;
+  final String? thumb_url;
   final List<String>? author;
   final List<Category>? category;
-  final List<Chapter>? chapters;
+  final List<ServerData>? chapters;
   final String? updatedAt;
 
   ComicDetail({
@@ -22,6 +23,7 @@ class ComicDetail {
     this.origin_name,
     this.content,
     this.status,
+    this.thumb_url,
     this.author,
     this.category,
     this.chapters,
@@ -31,4 +33,19 @@ class ComicDetail {
   factory ComicDetail.fromJson(Map<String, dynamic> json) =>
       _$ComicDetailFromJson(json);
   Map<String, dynamic> toJson() => _$ComicDetailToJson(this);
+}
+
+@JsonSerializable()
+class ServerData {
+  String? server_name;
+  List<Chapter>? server_data;
+
+  ServerData({
+    this.server_name,
+    this.server_data,
+  });
+
+  factory ServerData.fromJson(Map<String, dynamic> json) =>
+      _$ServerDataFromJson(json);
+  Map<String, dynamic> toJson() => _$ServerDataToJson(this);
 }
