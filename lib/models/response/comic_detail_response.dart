@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:thichtruyentranh/models/category.dart';
 import 'package:thichtruyentranh/models/comic_detail.dart';
 
 part 'comic_detail_response.g.dart';
@@ -19,9 +18,7 @@ class ComicDetailResponse {
 class Data {
   final ComicDetail? item;
 
-  Data({
-    this.item,
-  });
+  Data({this.item});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);

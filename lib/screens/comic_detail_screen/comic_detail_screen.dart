@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:thichtruyentranh/common/constants.dart';
 import 'package:thichtruyentranh/common/share_color.dart';
+import 'package:thichtruyentranh/screens/chapter_detail_screen/chapter_detail_screen.dart';
 import 'package:thichtruyentranh/screens/comic_detail_screen/controller/comic_detail_controller.dart';
 import 'package:thichtruyentranh/screens/comic_detail_screen/widgets/title_and_content.dart';
+import 'package:thichtruyentranh/widgets/loading_widget.dart';
 import 'package:thichtruyentranh/widgets/shimmer.dart';
 import 'package:thichtruyentranh/widgets/wrap_category.dart';
 
@@ -69,40 +71,49 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
         body: TabBarView(
           children: [
             _buildInformation(context),
-            Obx(
-              () {
-                final comic = _controller.comic.value;
-                if (_controller.isLoading.value) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return ListView.separated(
-                  itemCount: comic!.chapters![0].server_data!.length,
-                  itemBuilder: (context, index) {
-                    final reversedList =
-                        comic.chapters![0].server_data!.reversed.toList();
-                    final chapter = reversedList[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        maxLines: 1,
-                        'Chương ${chapter.chapter_name} ${chapter.chapter_title}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider();
-                  },
-                );
-              },
-            )
+            _buildChapters(),
           ],
         ),
       ),
+    );
+  }
+
+  Obx _buildChapters() {
+    return Obx(
+      () {
+        final comic = _controller.comic.value;
+        if (_controller.isLoading.value) {
+          return LoadingWidget();
+        }
+        return ListView.separated(
+          itemCount: comic!.chapters![0].server_data!.length,
+          itemBuilder: (context, index) {
+            final reversed = comic.chapters![0].server_data!.reversed.toList();
+            final chapter = reversed[index];
+
+            return GestureDetector(
+              onTap: () => Get.to(
+                () => ChapterDetailScreen(
+                  api: chapter.chapter_api_data ?? '',
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  maxLines: 1,
+                  'Chương ${chapter.chapter_name} ${chapter.chapter_title}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider();
+          },
+        );
+      },
     );
   }
 
@@ -111,9 +122,7 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
       () {
         final comic = _controller.comic.value;
         if (_controller.isLoading.value) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return LoadingWidget();
         }
         return Padding(
           padding: const EdgeInsets.all(8.0),
