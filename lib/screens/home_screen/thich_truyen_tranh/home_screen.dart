@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
         GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 0.56,
+            childAspectRatio: 0.55,
           ),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -237,7 +237,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: CachedNetworkImage(
-                        height: 160,
+                        width: 100,
+                        height: 150,
                         imageUrl: '${Constants.CND_IMAGE}${comic.thumb_url}',
                         fit: BoxFit.cover,
                         placeholder: (context, url) => const ShimmerImage(),

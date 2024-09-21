@@ -88,13 +88,14 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
         return ListView.separated(
           itemCount: comic!.chapters![0].server_data!.length,
           itemBuilder: (context, index) {
-            final reversed = comic.chapters![0].server_data!.reversed.toList();
+            final reversed = comic.chapters![0].server_data!;
             final chapter = reversed[index];
-
             return GestureDetector(
               onTap: () => Get.to(
                 () => ChapterDetailScreen(
                   api: chapter.chapter_api_data ?? '',
+                  currentIndex: index,
+                  chapters: reversed,
                 ),
               ),
               child: Padding(

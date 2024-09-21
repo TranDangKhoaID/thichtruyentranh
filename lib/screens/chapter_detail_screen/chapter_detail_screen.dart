@@ -4,16 +4,21 @@ import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:thichtruyentranh/models/chapter.dart';
 import 'package:thichtruyentranh/screens/chapter_detail_screen/controller/chapter_detail_controller.dart';
 import 'package:thichtruyentranh/widgets/loading_widget.dart';
 import 'package:thichtruyentranh/widgets/shimmer.dart';
 
 class ChapterDetailScreen extends StatefulWidget {
   final String api;
+  final int currentIndex;
+  final List<Chapter> chapters;
 
   const ChapterDetailScreen({
     super.key,
     required this.api,
+    required this.currentIndex,
+    required this.chapters,
   });
 
   @override
@@ -24,9 +29,7 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
     with AfterLayoutMixin {
   //controller
   final _controller = Get.put(ChapterDetailController());
-  late final domain;
-  late final path;
-  //
+
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
     await _controller.getChapter(api: widget.api);
@@ -46,6 +49,7 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
             return SingleChildScrollView(
               child: Column(
                 children: [
+                  Text(widget.currentIndex.toString()),
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -69,7 +73,31 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
                     height: 20,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (widget.currentIndex < widget.chapters.length - 1) {
+                        final nextIndex = widget.currentIndex + 1;
+                        print('${widget.currentIndex} , $nextIndex');
+                        // Get.to(
+                        //   () => ChapterDetailScreen(
+                        //     api: widget.chapters[nextIndex].chapter_api_data!,
+                        //     currentIndex: nextIndex,
+                        //     chapters: widget.chapters,
+                        //   ),
+                        // );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChapterDetailScreen(
+                              api: widget.chapters[nextIndex].chapter_api_data!,
+                              currentIndex: nextIndex,
+                              chapters: widget.chapters,
+                            ),
+                          ),
+                        );
+                      } else {
+                        print('Không còn chapter nào tiếp theo');
+                      }
+                    },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
