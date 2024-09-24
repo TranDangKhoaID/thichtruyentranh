@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:thichtruyentranh/common/share_color.dart';
 import 'package:thichtruyentranh/models/chapter.dart';
 import 'package:thichtruyentranh/screens/chapter_detail_screen/controller/chapter_detail_controller.dart';
 import 'package:thichtruyentranh/widgets/loading_widget.dart';
@@ -49,9 +50,8 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  Text(widget.currentIndex.toString()),
                   ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _controller.chapter.value!.chapter_image!.length,
                     itemBuilder: (context, index) {
@@ -69,47 +69,63 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
                       );
                     },
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      if (widget.currentIndex < widget.chapters.length - 1) {
-                        final nextIndex = widget.currentIndex + 1;
-                        print('${widget.currentIndex} , $nextIndex');
-                        // Get.to(
-                        //   () => ChapterDetailScreen(
-                        //     api: widget.chapters[nextIndex].chapter_api_data!,
-                        //     currentIndex: nextIndex,
-                        //     chapters: widget.chapters,
-                        //   ),
-                        // );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChapterDetailScreen(
-                              api: widget.chapters[nextIndex].chapter_api_data!,
-                              currentIndex: nextIndex,
-                              chapters: widget.chapters,
-                            ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Visibility(
+                        visible: widget.currentIndex > 0,
+                        child: IconButton(
+                          color: ShareColors.kPrimaryColor,
+                          onPressed: () {
+                            final previousIndex = widget.currentIndex - 1;
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChapterDetailScreen(
+                                  api: widget.chapters[previousIndex]
+                                      .chapter_api_data!,
+                                  currentIndex: previousIndex,
+                                  chapters: widget.chapters,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios,
                           ),
-                        );
-                      } else {
-                        print('Không còn chapter nào tiếp theo');
-                      }
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Tiếp theo'),
-                        SizedBox(width: 8),
-                        Icon(Icons.arrow_forward_ios),
-                      ],
-                    ),
+                        ),
+                      ),
+                      Text(
+                        'Chương ${_controller.chapter.value?.chapter_name}',
+                      ),
+                      Visibility(
+                        visible:
+                            widget.currentIndex < widget.chapters.length - 1,
+                        child: IconButton(
+                          color: ShareColors.kPrimaryColor,
+                          onPressed: () {
+                            final nextIndex = widget.currentIndex + 1;
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChapterDetailScreen(
+                                  api: widget
+                                      .chapters[nextIndex].chapter_api_data!,
+                                  currentIndex: nextIndex,
+                                  chapters: widget.chapters,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                 ],
               ),
             );
