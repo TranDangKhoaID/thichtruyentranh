@@ -24,7 +24,7 @@ class ProgressWidget extends StatelessWidget {
     return Center(
       child: LoadingAnimationWidget.staggeredDotsWave(
         size: 25,
-        color: Colors.white,
+        color: ShareColors.kPrimaryColor,
       ),
     );
   }
