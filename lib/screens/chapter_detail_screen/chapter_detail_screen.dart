@@ -60,25 +60,37 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
         itemCount: widget.chapters.length,
         itemBuilder: (context, index) {
           final chapter = widget.chapters[index];
-          return Container(
-            margin: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: ShareColors.kPrimaryColor,
-                width: 1.5,
+          return GestureDetector(
+            onTap: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChapterDetailScreen(
+                  api: chapter.chapter_api_data!,
+                  currentIndex: index,
+                  chapters: widget.chapters,
+                ),
               ),
-              borderRadius: BorderRadius.circular(10),
             ),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(10),
-            child: widget.currentIndex == index
-                ? const ProgressWidget()
-                : Text(
-                    chapter.chapter_name.toString(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
+            child: Container(
+              margin: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: ShareColors.kPrimaryColor,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              child: widget.currentIndex == index
+                  ? const ProgressWidget()
+                  : Text(
+                      chapter.chapter_name.toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
+            ),
           );
         },
       ),

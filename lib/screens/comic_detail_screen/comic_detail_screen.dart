@@ -85,12 +85,19 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
         if (_controller.isLoading.value) {
           return LoadingWidget();
         }
+        if (comic == null ||
+            comic.chapters == null ||
+            comic.chapters!.isEmpty) {
+          return Center(
+            child: Text('Đang cập nhật'),
+          );
+        }
         return ListView.separated(
-          itemCount: comic!.chapters![0].server_data!.length,
+          itemCount: comic.chapters![0].server_data!.length,
           itemBuilder: (context, index) {
             final reversed = comic.chapters![0].server_data!;
             final chapter = reversed[index];
-            return GestureDetector(
+            return InkWell(
               onTap: () => Get.to(
                 () => ChapterDetailScreen(
                   api: chapter.chapter_api_data ?? '',
@@ -98,8 +105,11 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
                   chapters: reversed,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 10,
+                ),
                 child: Text(
                   maxLines: 1,
                   'Chương ${chapter.chapter_name} ${chapter.chapter_title}',
@@ -111,7 +121,7 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
             );
           },
           separatorBuilder: (BuildContext context, int index) {
-            return Divider();
+            return Divider(height: 1, thickness: 0.5);
           },
         );
       },

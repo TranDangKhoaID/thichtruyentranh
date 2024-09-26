@@ -38,26 +38,26 @@ class HomeController extends GetxController {
   }
 
   //
-  Future<void> getCurrentlyComics() async {
-    try {
-      final updatedLoadings = List<bool>.from(isLoadings.value);
-      updatedLoadings[1] = true;
-      isLoadings.value = updatedLoadings;
-      final response = await dataRepository.getComics(
-        type: 'dang-phat-hanh',
-        page: 1,
-      );
-      final updatedMovies = List<List<Comic>>.from(comics.value);
-      updatedMovies[1] = response.data!.items ?? [];
-      comics.value = updatedMovies;
-    } catch (e) {
-      debugPrint('Get comics 1 error $e');
-    } finally {
-      final updatedLoadings = List<bool>.from(isLoadings.value);
-      updatedLoadings[1] = false;
-      isLoadings.value = updatedLoadings;
-    }
-  }
+  // Future<void> getCurrentlyComics() async {
+  //   try {
+  //     final updatedLoadings = List<bool>.from(isLoadings.value);
+  //     updatedLoadings[1] = true;
+  //     isLoadings.value = updatedLoadings;
+  //     final response = await dataRepository.getComics(
+  //       type: 'dang-phat-hanh',
+  //       page: 1,
+  //     );
+  //     final updatedMovies = List<List<Comic>>.from(comics.value);
+  //     updatedMovies[1] = response.data!.items ?? [];
+  //     comics.value = updatedMovies;
+  //   } catch (e) {
+  //     debugPrint('Get comics 1 error $e');
+  //   } finally {
+  //     final updatedLoadings = List<bool>.from(isLoadings.value);
+  //     updatedLoadings[1] = false;
+  //     isLoadings.value = updatedLoadings;
+  //   }
+  // }
 
   //
   Future<void> getCompleteComics() async {
