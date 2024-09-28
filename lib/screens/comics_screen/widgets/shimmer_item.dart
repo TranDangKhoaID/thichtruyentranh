@@ -23,7 +23,7 @@ class ShimmerItem extends StatelessWidget {
                     baseColor: Colors.grey[300]!,
                     highlightColor: Colors.grey[100]!,
                     child: Container(
-                      height: 200,
+                      height: 150,
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(10),
@@ -31,8 +31,8 @@ class ShimmerItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
-                Expanded(
+                const SizedBox(width: 10),
+                const Expanded(
                   flex: 2,
                   child: Column(
                     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +50,7 @@ class ShimmerItem extends StatelessWidget {
             ),
           );
         },
-        itemCount: 3,
+        itemCount: 4,
       ),
     );
   }

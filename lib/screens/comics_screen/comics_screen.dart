@@ -4,9 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:number_paginator/number_paginator.dart';
 import 'package:thichtruyentranh/common/constants.dart';
-import 'package:thichtruyentranh/common/share_color.dart';
 import 'package:thichtruyentranh/extensions/string.dart';
 import 'package:thichtruyentranh/screens/comics_screen/controller/comics_controller.dart';
 import 'package:thichtruyentranh/screens/comics_screen/widgets/shimmer_item.dart';
@@ -28,7 +26,8 @@ class ComicsScreen extends StatefulWidget {
 }
 
 class _ComicsScreenState extends State<ComicsScreen> with AfterLayoutMixin {
-  //
+  /// MARK: - Initials;
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final _controller = Get.put(ComicsController());
   int _page = 1;
   //
@@ -40,112 +39,123 @@ class _ComicsScreenState extends State<ComicsScreen> with AfterLayoutMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(widget.title ?? ''),
+        actions: [
+          Row(
+            children: [
+              Visibility(
+                visible: _page > 1,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _page -= 1;
+                    });
+                    _controller.comics.value.clear();
+                    _controller.getComics(page: _page, type: widget.type);
+                  },
+                  icon: Icon(Icons.arrow_back_ios),
+                ),
+              ),
+              Text(_page.toString()),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _page += 1;
+                  });
+                  _controller.comics.value.clear();
+                  _controller.getComics(page: _page, type: widget.type);
+                },
+                icon: Icon(Icons.arrow_forward_ios),
+              )
+            ],
+          )
+        ],
       ),
-      body: Column(
-        children: [
-          NumberPaginator(
-            numberPages: 10,
-            onPageChange: (index) {
-              setState(() {
-                _page = index + 1;
-              });
-              _controller.comics.value.clear();
-              _controller.getComics(
-                page: _page,
-                type: widget.type,
-              );
-            },
-            config: NumberPaginatorUIConfig(
-              buttonSelectedBackgroundColor: ShareColors.kPrimaryColor,
-            ),
-          ),
-          Expanded(
-            child: Obx(
-              () {
-                if (_controller.isLoading.value) {
-                  return ShimmerItem();
-                }
-                if (_controller.comics.value.isEmpty) {
-                  return Center(child: Text('No comics available'));
-                }
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      final comic = _controller.comics.value[index];
-                      return GestureDetector(
-                        // onTap: () => Get.to(
-                        //   () => MovieDetailScreen(slug: movie.slug!),
-                        // ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+      body: Obx(
+        () {
+          if (_controller.isLoading.value) {
+            return ShimmerItem();
+          }
+          if (_controller.comics.value.isEmpty) {
+            return Center(
+              child: Text('No comics available'),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                final comic = _controller.comics.value[index];
+                return GestureDetector(
+                  // onTap: () => Get.to(
+                  //   () => MovieDetailScreen(slug: movie.slug!),
+                  // ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: CachedNetworkImage(
+                              //height: 200,
+                              imageUrl:
+                                  '${Constants.CND_IMAGE}/${comic.thumb_url}',
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  const ShimmerImage(),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error,
+                              ),
+                            ),
                           ),
-                          child: Row(
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                flex: 1,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: CachedNetworkImage(
-                                    //height: 200,
-                                    imageUrl:
-                                        '${Constants.CND_IMAGE}/${comic.thumb_url}',
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        const ShimmerImage(),
-                                    errorWidget: (context, url, error) => Icon(
-                                      Icons.error,
-                                    ),
-                                  ),
+                              Text(
+                                comic.name ?? '',
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      comic.name ?? '',
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Cập nhật lúc: ${formattedStringDateTime(comic.updatedAt ?? '')}',
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    WrapCategory(
-                                      items: comic.category ?? [],
-                                    ),
-                                  ],
+                              SizedBox(height: 10),
+                              Text(
+                                'Chap ${comic.chaptersLatest?.first.chapter_name}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
+                              ),
+                              SizedBox(height: 10),
+                              WrapCategory(
+                                items: comic.category ?? [],
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                    itemCount: _controller.comics.value.length,
+                      ],
+                    ),
                   ),
                 );
               },
+              itemCount: _controller.comics.value.length,
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

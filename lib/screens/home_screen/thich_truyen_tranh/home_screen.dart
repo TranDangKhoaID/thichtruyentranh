@@ -70,9 +70,8 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                   isLoading: _controller.isLoadings.value[2],
                   title: 'Hoàn thành',
                   onTap: () => Get.to(
-                    () => ComicsScreen(
+                    () => const ComicsScreen(
                       type: 'truyen-moi',
-                      //totalPages: _controller.totalPages.value[1],
                       title: 'Hoàn thành',
                     ),
                   ),
@@ -85,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                   onTap: () => Get.to(
                     () => ComicsScreen(
                       type: 'sap-ra-mat',
-                      //totalPages: _controller.totalPages.value[1],
                       title: 'Sắp ra mắt',
                     ),
                   ),
@@ -139,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
           ),
         ),
         SizedBox(
-          height: 220,
+          height: 230,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
@@ -174,6 +172,15 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        'Chap ${comic.chaptersLatest?.first.chapter_name}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

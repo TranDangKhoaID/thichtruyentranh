@@ -28,7 +28,8 @@ class ChapterDetailScreen extends StatefulWidget {
 
 class _ChapterDetailScreenState extends State<ChapterDetailScreen>
     with AfterLayoutMixin {
-  //controller
+  /// MARK: - Initials;
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final _controller = Get.put(ChapterDetailController());
   //app bar
   bool _showPosition = false;
@@ -46,6 +47,7 @@ class _ChapterDetailScreenState extends State<ChapterDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       endDrawer: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         child: _buildEndDrawer(),

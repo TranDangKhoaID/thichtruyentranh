@@ -23,7 +23,8 @@ class ComicDetailScreen extends StatefulWidget {
 
 class _ComicDetailScreenState extends State<ComicDetailScreen>
     with AfterLayoutMixin {
-  //
+  /// MARK: - Initials;
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   final _controller = Get.put(ComicDetailController());
   //
   bool isHidden = false;
@@ -58,6 +59,7 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        key: _globalKey,
         appBar: AppBar(
           title: Text('thichtruyentranh'),
           leading: IconButton(
