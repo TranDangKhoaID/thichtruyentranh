@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:thichtruyentranh/common/constants.dart';
 import 'package:thichtruyentranh/extensions/string.dart';
+import 'package:thichtruyentranh/screens/comic_detail_screen/comic_detail_screen.dart';
 import 'package:thichtruyentranh/screens/comics_screen/controller/comics_controller.dart';
 import 'package:thichtruyentranh/screens/comics_screen/widgets/shimmer_item.dart';
 import 'package:thichtruyentranh/widgets/shimmer.dart';
@@ -89,9 +90,9 @@ class _ComicsScreenState extends State<ComicsScreen> with AfterLayoutMixin {
               itemBuilder: (context, index) {
                 final comic = _controller.comics.value[index];
                 return GestureDetector(
-                  // onTap: () => Get.to(
-                  //   () => MovieDetailScreen(slug: movie.slug!),
-                  // ),
+                  onTap: () => Get.to(
+                    () => ComicDetailScreen(slug: comic.slug!),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,

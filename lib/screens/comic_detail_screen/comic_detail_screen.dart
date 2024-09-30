@@ -4,8 +4,11 @@ import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:like_button/like_button.dart';
+import 'package:thichtruyentranh/boxes.dart';
 import 'package:thichtruyentranh/common/constants.dart';
 import 'package:thichtruyentranh/common/share_color.dart';
+import 'package:thichtruyentranh/models/hive_local/comic_favorite.dart';
 import 'package:thichtruyentranh/screens/chapter_detail_screen/chapter_detail_screen.dart';
 import 'package:thichtruyentranh/screens/comic_detail_screen/controller/comic_detail_controller.dart';
 import 'package:thichtruyentranh/screens/comic_detail_screen/widgets/title_and_content.dart';
@@ -48,6 +51,26 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
   }
 
   //
+  Future<bool?> toggleFavorite({required bool isFavorite}) async {
+    //
+    final movie = ComicFavorite(
+      name: _controller.comic.value!.name,
+      thumb_url: _controller.comic.value!.thumb_url,
+      slug: widget.slug,
+      indexSelected: 0,
+    );
+
+    if (isFavorite) {
+      await boxFavorites.delete('key${widget.slug}');
+    } else {
+      await boxFavorites.put('key${widget.slug}', movie);
+    }
+
+    // Trả về giá trị boolean mới
+    return !isFavorite;
+  }
+
+  //
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
     await _controller.getComicDetail(slug: widget.slug);
@@ -56,6 +79,7 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isFavorite = boxFavorites.get('key${widget.slug}') != null;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -72,7 +96,10 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
         ),
         body: TabBarView(
           children: [
-            _buildInformation(context),
+            _buildInformation(
+              context,
+              isFavorite,
+            ),
             _buildChapters(),
           ],
         ),
@@ -130,7 +157,7 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
     );
   }
 
-  Obx _buildInformation(BuildContext context) {
+  Obx _buildInformation(BuildContext context, bool isFavorite) {
     return Obx(
       () {
         final comic = _controller.comic.value;
@@ -176,7 +203,22 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Icon(Icons.favorite),
+                              LikeButton(
+                                isLiked: isFavorite,
+                                size: 30,
+                                onTap: (isFavorite) => toggleFavorite(
+                                  isFavorite: isFavorite,
+                                ),
+                                likeBuilder: (bool isLiked) {
+                                  return Icon(
+                                    isLiked
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: isLiked ? Colors.red : Colors.grey,
+                                    size: 30,
+                                  );
+                                },
+                              ),
                               Icon(Icons.share),
                               Icon(Icons.download)
                             ],
