@@ -3,6 +3,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:thichtruyentranh/models/response/comic_detail_response.dart';
 import 'package:thichtruyentranh/models/response/comics_response.dart';
 import 'package:thichtruyentranh/models/response/home_response.dart';
+import 'package:thichtruyentranh/models/response/search_comic_response.dart';
 
 part 'rest_client.g.dart';
 
@@ -23,5 +24,10 @@ abstract class RestClient {
   @GET('/v1/api/truyen-tranh/{slug}')
   Future<ComicDetailResponse> getComicDetail({
     @Path('slug') required String slug,
+  });
+
+  @GET('/v1/api/tim-kiem?keyword={name}')
+  Future<SearchComicResponse> searchComics({
+    @Path('name') required String name,
   });
 }

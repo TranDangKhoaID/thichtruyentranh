@@ -80,6 +80,7 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
   @override
   Widget build(BuildContext context) {
     final isFavorite = boxFavorites.get('key${widget.slug}') != null;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -100,14 +101,31 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
               context,
               isFavorite,
             ),
-            _buildChapters(),
+            _buildChapters(isFavorite),
           ],
+        ),
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.all(20),
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: ShareColors.kPrimaryColor,
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Text(
+            isFavorite
+                ? 'Chương ${boxFavorites.get('key${widget.slug}').indexSelected}'
+                : 'Bắt đầu đọc',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Obx _buildChapters() {
+  Obx _buildChapters(bool isFavorite) {
     return Obx(
       () {
         final comic = _controller.comic.value;
@@ -127,13 +145,24 @@ class _ComicDetailScreenState extends State<ComicDetailScreen>
             final reversed = comic.chapters![0].server_data!;
             final chapter = reversed[index];
             return InkWell(
-              onTap: () => Get.to(
-                () => ChapterDetailScreen(
-                  api: chapter.chapter_api_data ?? '',
-                  currentIndex: index,
-                  chapters: reversed,
-                ),
-              ),
+              onTap: () async {
+                if (isFavorite) {
+                  final movie = ComicFavorite(
+                    name: _controller.comic.value!.name,
+                    thumb_url: _controller.comic.value!.thumb_url,
+                    slug: widget.slug,
+                    indexSelected: double.tryParse(chapter.chapter_name!),
+                  );
+                  await boxFavorites.put('key${widget.slug}', movie);
+                }
+                Get.to(
+                  () => ChapterDetailScreen(
+                    api: chapter.chapter_api_data ?? '',
+                    currentIndex: index,
+                    chapters: reversed,
+                  ),
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 20,

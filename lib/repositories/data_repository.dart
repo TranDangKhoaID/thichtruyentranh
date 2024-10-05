@@ -5,6 +5,7 @@ import 'package:thichtruyentranh/common/configs.dart';
 import 'package:thichtruyentranh/models/response/comic_detail_response.dart';
 import 'package:thichtruyentranh/models/response/comics_response.dart';
 import 'package:thichtruyentranh/models/response/home_response.dart';
+import 'package:thichtruyentranh/models/response/search_comic_response.dart';
 import 'package:thichtruyentranh/network/rest_client.dart';
 
 @lazySingleton
@@ -52,5 +53,10 @@ class DataRepository implements RestClient {
   @override
   Future<ComicDetailResponse> getComicDetail({required String slug}) {
     return _client.getComicDetail(slug: slug);
+  }
+
+  @override
+  Future<SearchComicResponse> searchComics({required String name}) {
+    return _client.searchComics(name: name);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:thichtruyentranh/common/constants.dart';
 import 'package:thichtruyentranh/models/comic.dart';
@@ -10,6 +11,7 @@ import 'package:thichtruyentranh/screens/comic_detail_screen/comic_detail_screen
 import 'package:thichtruyentranh/screens/comics_screen/comics_screen.dart';
 import 'package:thichtruyentranh/screens/home_screen/controller/home_controller.dart';
 import 'package:thichtruyentranh/screens/home_screen/widgets/shimmer_grid_items.dart';
+import 'package:thichtruyentranh/widgets/loading_widget.dart';
 import 'package:thichtruyentranh/widgets/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
   final _controller = Get.put(HomeController());
 
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+  bool _isSearching = false;
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
@@ -39,9 +42,7 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
-      appBar: AppBar(
-        elevation: 0,
-      ),
+      appBar: _buildAppbar(),
       body: Container(
         padding: const EdgeInsets.all(5),
         color: Colors.white,
@@ -93,6 +94,85 @@ class _HomeScreenState extends State<HomeScreen> with AfterLayoutMixin {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar _buildAppbar() {
+    return AppBar(
+      title: !_isSearching
+          ? Row(
+              children: const [
+                SizedBox(height: 10),
+                Text(
+                  'Đọc Truyện',
+                ),
+              ],
+            )
+          : TypeAheadField<Comic>(
+              suggestionsCallback: (search) async {
+                return await _controller.searchComics(name: search);
+              },
+              loadingBuilder: (context) => LoadingWidget(),
+              //emptyBuilder: (context) => Text('Hãy nhập tên phim đúng'),
+              builder: (context, controller, focusNode) {
+                return TextField(
+                  controller: controller,
+                  autofocus: true,
+                  focusNode: focusNode,
+                  decoration: const InputDecoration(
+                    hintText: 'Nhập tên truyện...',
+                    border: InputBorder.none,
+                  ),
+                  style: TextStyle(color: Colors.black),
+                );
+              },
+              itemBuilder: (context, comic) {
+                return ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: CachedNetworkImage(
+                      width: 80,
+                      //height: 80,
+                      imageUrl: '${Constants.CND_IMAGE}${comic.thumb_url}',
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => const ShimmerImage(),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.error,
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    '${comic.name}',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    comic.chaptersLatest?.first.chapter_name ?? '',
+                  ),
+                );
+              },
+              onSelected: (movie) => Get.to(
+                () => ComicDetailScreen(slug: movie.slug!),
+              ),
+            ),
+      elevation: 0,
+      //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      actions: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _isSearching = !_isSearching;
+              // if (!_isSearching) {
+              //   _searchController.clear();
+              // }
+            });
+          },
+          icon: Icon(
+            _isSearching ? Icons.close : Icons.search,
+          ),
+        ),
+      ],
     );
   }
 

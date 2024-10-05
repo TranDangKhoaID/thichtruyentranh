@@ -20,7 +20,7 @@ class ComicFavoriteAdapter extends TypeAdapter<ComicFavorite> {
       name: fields[0] as String?,
       slug: fields[1] as String?,
       thumb_url: fields[2] as String?,
-      indexSelected: fields[3] as int?,
+      indexSelected: fields[3] as double?,
     );
   }
 

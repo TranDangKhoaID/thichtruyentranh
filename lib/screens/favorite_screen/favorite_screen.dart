@@ -79,7 +79,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         ),
                       ),
                       Text(
-                        'Chương ${movie.indexSelected! + 1}',
+                        'Chương ${movie.indexSelected! % 1 == 0 ? movie.indexSelected!.toInt() : movie.indexSelected}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

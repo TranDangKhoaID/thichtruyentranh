@@ -14,7 +14,7 @@ class ComicFavorite {
   final String? thumb_url;
 
   @HiveField(3)
-  final int? indexSelected;
+  final double? indexSelected;
 
   ComicFavorite({
     this.name,

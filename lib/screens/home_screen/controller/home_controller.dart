@@ -102,4 +102,16 @@ class HomeController extends GetxController {
       isLoadings.value = updatedLoadings;
     }
   }
+
+  Future<List<Comic>> searchComics({
+    required String name,
+  }) async {
+    try {
+      final response = await dataRepository.searchComics(name: name);
+      return response.data!.items ?? [];
+    } catch (e) {
+      debugPrint('Get search comics error $e');
+      return [];
+    }
+  }
 }
